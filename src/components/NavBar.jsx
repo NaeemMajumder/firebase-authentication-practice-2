@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import{ AuthContext } from "../providers/AuthProvider";
 
 const NavBar = () => {
+
+    let {user, logOutUser} = useContext(AuthContext);
+    console.log(user);
+
+    let logoutUserButton = ()=>{
+        logOutUser()
+        .then((result)=>{
+            console.log(result);
+        })
+        .catch(error=>console.log(error));
+    }
+
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -31,6 +45,13 @@ const NavBar = () => {
                 <li><NavLink to="/">Home</NavLink></li>
                 <li><NavLink to="/login">Login</NavLink></li>
                 <li><NavLink to="/register">Register</NavLink></li>
+
+                {
+                    user && <>
+                        <li><NavLink to="/order">Orders</NavLink></li>
+                        <li><NavLink to="/profile">Profile</NavLink></li>
+                    </>
+                }
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">daisyUI</a>
@@ -40,11 +61,25 @@ const NavBar = () => {
                 <li><NavLink to="/">Home</NavLink></li>
                 <li><NavLink to="/login">Login</NavLink></li>
                 <li><NavLink to="/register">Register</NavLink></li>
+                {
+                    user && <>
+                        <li><NavLink to="/order">Orders</NavLink></li>
+                        <li><NavLink to="/profile">Profile</NavLink></li>
+
+                    </>
+                }
+
           </ul>
         </div>
-        <div className="navbar-end">
-          <a className="btn">Button</a>
+
+        {
+            user &&         <div className="navbar-end">
+          <a className="btn">{user?.email}</a>
+          <button onClick={logoutUserButton} className="btn ml-2">Log Out</button>
         </div>
+        }
+
+        
       </div>
     </>
   );

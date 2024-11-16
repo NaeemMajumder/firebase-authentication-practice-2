@@ -1,15 +1,27 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Register = () => {
-  let handleRegister = (event) => {
-    event.preventDefault();
-    let email = event.target.email.value;
-    let password = event.target.password.value;
-    let username = event.target.username.value;
+    let {createUser} = useContext(AuthContext);
+    let navigate = useNavigate();
 
-    console.log(username, ".............",email, ".............", password);
-  };
+    let handleRegister = (event) => {
+
+        event.preventDefault();
+        let email = event.target.email.value;
+        let password = event.target.password.value;
+        let username = event.target.username.value;
+
+        createUser(email,password)
+        .then((result)=>{
+            console.log(result.user)
+            event.target.reset();
+            navigate("/")
+        })
+        .catch(error=>console.log(error));
+    };
+
 
   return (
     <>

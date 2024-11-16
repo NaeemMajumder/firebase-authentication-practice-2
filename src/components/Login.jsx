@@ -1,15 +1,37 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Login = () => {
+
+    let navigate = useNavigate();
+
+    let {loginUser, signInwithGoogle} = useContext(AuthContext);
 
     let handleLogin = (event)=>{
         event.preventDefault();
         let email = event.target.email.value;
         let password = event.target.password.value;
 
-        console.log(email,".............",password);
+        loginUser(email, password)
+        .then((result)=>{
+            console.log(result.user);
+            event.target.reset();
+            navigate("/")
+        })
+        .catch(error=>console.log(error));
 
+    }
+
+    let loginWithGoogle = ()=>{
+        signInwithGoogle()
+        .then((result)=>{
+            console.log(result.user);
+            navigate("/")
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
     }
 
   return (
@@ -50,6 +72,7 @@ const Login = () => {
           <p className="mb-4 text-start">Do not have an account? <NavLink className={"text-blue-500 underline"} to="/register">Register</NavLink></p>
 
           <button className="btn btn-wide text-md font-bold text-white bg-purple-600">Login</button>
+          <button onClick={loginWithGoogle} className="btn btn-wide text-md font-bold ">Google</button>
 
         </form>
 
